@@ -30,25 +30,16 @@ public class HexGrid : MonoBehaviour
     void Start(){
         hexMesh.Triangulate(cells);
     }
-
-    void Update(){
-        if (Input.GetKeyDown(KeyCode.Mouse0)){
-            HandleInput();
-        }
-    }
-    void HandleInput(){
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(inputRay, out RaycastHit hit)){
-            TouchCell(hit.point);
-        }
-    }
-    void TouchCell(Vector3 position){
+    
+    public void ColorCell(Vector3 position, Color color){
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+
         int index = coordinates.X + coordinates.Z * xWidht + coordinates.Z/2;
         HexCell cell = cells[index];
-        cell.color = touchedColor;
+        cell.color = color;
         hexMesh.Triangulate(cells);
+
         print("touched at " + coordinates.ToString());
     }
 
