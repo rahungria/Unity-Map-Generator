@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HexGrid : MonoBehaviour {
 
@@ -9,7 +10,7 @@ public class HexGrid : MonoBehaviour {
 	public Color defaultColor = Color.white;
 
 	public HexCell cellPrefab;
-	public Text cellLabelPrefab;
+	public TextMeshProUGUI cellLabelPrefab;
 
 	HexCell[] cells;
 
@@ -72,10 +73,11 @@ public class HexGrid : MonoBehaviour {
 			}
 		}
 
-		Text label = Instantiate<Text>(cellLabelPrefab);
+		TextMeshProUGUI label = Instantiate<TextMeshProUGUI>(cellLabelPrefab);
 		label.rectTransform.SetParent(gridCanvas.transform, false);
 		label.rectTransform.anchoredPosition =
 			new Vector2(position.x, position.z);
+        label.transform.position += Vector3.up * .1f;
 		label.text = cell.coordinates.ToStringOnSeparateLines();
 	}
 }

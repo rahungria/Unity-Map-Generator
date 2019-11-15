@@ -498,17 +498,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 430029394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54460e7866773554a8d87228a0e9e6c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 414a0fc06528949a0baff4f719b04a4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xWidht: 6
-  zHeight: 6
-  cellPrefab: {fileID: 3948586422094921749, guid: e2b375212ba4f6e4e8ec5228c3310cd5,
+  width: 6
+  height: 6
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  cellPrefab: {fileID: 7916447313033534529, guid: e2b375212ba4f6e4e8ec5228c3310cd5,
     type: 3}
   cellLabelPrefab: {fileID: 1580319809258235320, guid: bd2bcb582bdce8f4598f3496fe1342a3,
     type: 3}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  touchedColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!4 &430029399
 Transform:
   m_ObjectHideFlags: 0
@@ -859,7 +858,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 687349763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93d9ed5ab6702664c84a5c18f197898e, type: 3}
+  m_Script: {fileID: 11500000, guid: c547250cafb924e6397c4c850c04fe5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!23 &687349766
@@ -937,13 +936,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 858794270}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ca68475a8a41d64db41db3fb987306e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e363bf5181e448a78cb05f5d6a64930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   colors:
-  - {r: 0.93467546, g: 1, b: 0, a: 0}
-  - {r: 0, g: 1, b: 0.036717176, a: 0}
-  - {r: 0.049640656, g: 0, b: 1, a: 0}
+  - {r: 0.95461273, g: 1, b: 0, a: 0}
+  - {r: 0.028630018, g: 1, b: 0, a: 0}
+  - {r: 0.28773582, g: 0.4689951, b: 1, a: 0}
   - {r: 1, g: 1, b: 1, a: 0}
   hexGrid: {fileID: 430029395}
 --- !u!114 &858794272
@@ -1492,7 +1491,6 @@ GameObject:
   - component: {fileID: 1687258585}
   - component: {fileID: 1687258584}
   - component: {fileID: 1687258582}
-  - component: {fileID: 1687258583}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1508,46 +1506,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
   m_Enabled: 1
---- !u!114 &1687258583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1687258581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be76e5f14cfee674cb30b491fb72b09b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boost: 3.5
-  positionLerpTime: 0.2
-  mouseSensitivityCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5
-      inSlope: 0
-      outSlope: 5
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 2.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  rotationLerpTime: 0.01
-  invertY: 0
 --- !u!20 &1687258584
 Camera:
   m_ObjectHideFlags: 0

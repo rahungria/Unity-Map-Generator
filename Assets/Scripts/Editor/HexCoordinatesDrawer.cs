@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+namespace conflict{
 [CustomPropertyDrawer(typeof(HexCoordinates))]
 public class HexCoordinatesDrawer : PropertyDrawer {
 
@@ -15,4 +16,5 @@ public class HexCoordinatesDrawer : PropertyDrawer {
 		position = EditorGUI.PrefixLabel(position, label);
 		GUI.Label(position, coordinates.ToString());
 	}
+}
 }

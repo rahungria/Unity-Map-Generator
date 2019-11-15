@@ -9,6 +9,10 @@ public class HexCell : MonoBehaviour {
 	[SerializeField]
 	HexCell[] neighbors;
 
+    void Awake(){
+        neighbors = new HexCell[6];
+    }
+
 	public HexCell GetNeighbor (HexDirection direction) {
 		return neighbors[(int)direction];
 	}
