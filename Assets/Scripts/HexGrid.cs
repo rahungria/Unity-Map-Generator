@@ -1,83 +1,81 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
-public class HexGrid : MonoBehaviour
-{
-    public int xWidht = 6, zHeight = 6;
-    public HexCell cellPrefab;
-    public TMPro.TextMeshProUGUI cellLabelPrefab;
+public class HexGrid : MonoBehaviour {
 
-    public Color defaultColor = Color.white, touchedColor = Color.magenta;
-    Canvas gridCanvas;
-    HexMesh hexMesh;
+	public int width = 6;
+	public int height = 6;
 
-    HexCell[] cells;
+	public Color defaultColor = Color.white;
 
-    void Awake(){
-        hexMesh = GetComponentInChildren<HexMesh>();
-        gridCanvas = GetComponentInChildren<Canvas>();
+	public HexCell cellPrefab;
+	public Text cellLabelPrefab;
 
-        cells = new HexCell[zHeight * xWidht];
+	HexCell[] cells;
 
-        for (int z = 0, i = 0; z < zHeight; z++){
-            for (int x = 0; x < xWidht; x++){
-                CreateCell(x,z,i++);
-            }
-        }
-    }
+	Canvas gridCanvas;
+	HexMesh hexMesh;
 
-    void Start(){
-        hexMesh.Triangulate(cells);
-    }
+	void Awake () {
+		gridCanvas = GetComponentInChildren<Canvas>();
+		hexMesh = GetComponentInChildren<HexMesh>();
 
-    public void ColorCell(Vector3 position, Color color){
-        position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+		cells = new HexCell[height * width];
 
-        int index = coordinates.X + coordinates.Z * xWidht + coordinates.Z/2;
-        HexCell cell = cells[index];
-        cell.color = color;
-        hexMesh.Triangulate(cells);
+		for (int z = 0, i = 0; z < height; z++) {
+			for (int x = 0; x < width; x++) {
+				CreateCell(x, z, i++);
+			}
+		}
+	}
 
-        print("touched at " + coordinates.ToString());
-    }
+	void Start () {
+		hexMesh.Triangulate(cells);
+	}
 
-    void CreateCell(int x, int z, int i){
-        Vector3 position;
-        position.x = (x + z * 0.5f - z/2) * (HexMetrics.innerRadius * 2f);
-        position.y = 0f;
-        position.z = z * (HexMetrics.outerRadius * 1.5f);
+	public void ColorCell (Vector3 position, Color color) {
+		position = transform.InverseTransformPoint(position);
+		HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+		int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+		HexCell cell = cells[index];
+		cell.color = color;
+		hexMesh.Triangulate(cells);
+	}
 
-        HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
-        cell.transform.SetParent(transform, false);
-        cell.transform.localPosition = position;
-        cell.coordinates = HexCoordinates.FromOffsetCoords(x,z);
-        cell.color = defaultColor;
+	void CreateCell (int x, int z, int i) {
+		Vector3 position;
+		position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
+		position.y = 0f;
+		position.z = z * (HexMetrics.outerRadius * 1.5f);
 
-        if (x > 0){
-            cell.SetNeighbour(HexDirection.W, cells[i-1]);
-        }
-        if (z > 0){
-            if ((z & 1) == 0){
-                cell.SetNeighbour(HexDirection.SE, cells[i-xWidht]);
-                if (x > 0){
-                    cell.SetNeighbour(HexDirection.SW, cells[i-xWidht-1]);
-                }
-            }
-            else {
-                cell.SetNeighbour(HexDirection.SW, cells[i - xWidht]);
-                if (x < xWidht - 1){
-                    cell.SetNeighbour(HexDirection.SE, cells[i - xWidht + 1]); 
-                }
-            }
-        }
+		HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
+		cell.transform.SetParent(transform, false);
+		cell.transform.localPosition = position;
+		cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+		cell.color = defaultColor;
 
-        TMPro.TextMeshProUGUI label = Instantiate<TMPro.TextMeshProUGUI>(cellLabelPrefab);
-        label.rectTransform.SetParent(gridCanvas.transform, false);
-        label.rectTransform.anchoredPosition = 
-            new Vector2(position.x, position.z);
-        label.text = cell.coordinates.ToStringOnSeparateLines();
-        label.transform.position += Vector3.up * .1f;
-    }
+		if (x > 0) {
+			cell.SetNeighbor(HexDirection.W, cells[i - 1]);
+		}
+		if (z > 0) {
+			if ((z & 1) == 0) {
+				cell.SetNeighbor(HexDirection.SE, cells[i - width]);
+				if (x > 0) {
+					cell.SetNeighbor(HexDirection.SW, cells[i - width - 1]);
+				}
+			}
+			else {
+				cell.SetNeighbor(HexDirection.SW, cells[i - width]);
+				if (x < width - 1) {
+					cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
+				}
+			}
+		}
+
+		Text label = Instantiate<Text>(cellLabelPrefab);
+		label.rectTransform.SetParent(gridCanvas.transform, false);
+		label.rectTransform.anchoredPosition =
+			new Vector2(position.x, position.z);
+		label.text = cell.coordinates.ToStringOnSeparateLines();
+	}
 }
