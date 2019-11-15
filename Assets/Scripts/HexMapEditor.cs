@@ -19,7 +19,8 @@ public class HexMapEditor : MonoBehaviour
 
     void HandleInput(){
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(inputRay, out RaycastHit hit)){
+        if (Physics.Raycast(inputRay, out RaycastHit hit) &&
+        !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
             hexGrid.ColorCell(hit.point, activeColor);
         }
     }

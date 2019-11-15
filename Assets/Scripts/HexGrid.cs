@@ -30,7 +30,7 @@ public class HexGrid : MonoBehaviour
     void Start(){
         hexMesh.Triangulate(cells);
     }
-    
+
     public void ColorCell(Vector3 position, Color color){
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
@@ -54,6 +54,24 @@ public class HexGrid : MonoBehaviour
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoords(x,z);
         cell.color = defaultColor;
+
+        if (x > 0){
+            cell.SetNeighbour(HexDirection.W, cells[i-1]);
+        }
+        if (z > 0){
+            if ((z & 1) == 0){
+                cell.SetNeighbour(HexDirection.SE, cells[i-xWidht]);
+                if (x > 0){
+                    cell.SetNeighbour(HexDirection.SW, cells[i-xWidht-1]);
+                }
+            }
+            else {
+                cell.SetNeighbour(HexDirection.SW, cells[i - xWidht]);
+                if (x < xWidht - 1){
+                    cell.SetNeighbour(HexDirection.SE, cells[i - xWidht + 1]); 
+                }
+            }
+        }
 
         TMPro.TextMeshProUGUI label = Instantiate<TMPro.TextMeshProUGUI>(cellLabelPrefab);
         label.rectTransform.SetParent(gridCanvas.transform, false);
