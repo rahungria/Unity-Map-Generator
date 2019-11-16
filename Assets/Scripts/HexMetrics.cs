@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 
 public static class HexMetrics {
-
-	public const float outerRadius = 10f;
-
-	public const float innerRadius = outerRadius * 0.866025404f;
-
 	public const float solidFactor = 0.8f;
 
 	public const float blendFactor = 1f - solidFactor;
@@ -20,13 +15,19 @@ public static class HexMetrics {
 
 	public const float verticalTerraceStepSize = 1f / (terracesPerSlope + 1);
 
-	public const float cellPerturbStrength = 4f;
+	public const float cellPerturbStrength = 0f; //4f
 
 	public const float elevationPerturbStrength = 1.5f;
 
 	public const float noiseScale = 0.003f;
 
 	public const int chunkSizeX = 5, chunkSizeZ = 5;
+	public const float streamBedElevationOffset = -1f;
+	public const float outerToInner = 0.866025404f;
+	public const float innerToOuter = 1f / outerToInner;
+	public const float outerRadius = 10f;
+	public const float innerRadius = outerRadius * outerToInner;
+
 
 	static Vector3[] corners = {
 		new Vector3(0f, 0f, outerRadius),
@@ -91,5 +92,11 @@ public static class HexMetrics {
 			return HexEdgeType.Slope;
 		}
 		return HexEdgeType.Cliff;
+	}
+
+	public static Vector3 GetSolidEdgeMiddle(HexDirection direction){
+		return 
+		(corners[(int)direction] + corners[(int)direction+1]) *
+		(.5f * solidFactor);
 	}
 }

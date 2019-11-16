@@ -3,6 +3,12 @@ using UnityEngine.EventSystems;
 
 public class HexMapEditor : MonoBehaviour {
 
+	enum OptionalToggle{
+		IGNORE, YES, NO
+	}
+
+	OptionalToggle riverMode;
+
 	public Color[] colors;
 
 	public HexGrid hexGrid;
@@ -15,6 +21,9 @@ public class HexMapEditor : MonoBehaviour {
 
 	bool applyColor;
 	bool applyElevation = true;
+	bool isDrag;
+	HexDirection dragDirection;
+	HexCell previousCell;
 
 	public void SelectColor (int index) {
 		applyColor = index >= 0;
@@ -49,6 +58,9 @@ public class HexMapEditor : MonoBehaviour {
 			!EventSystem.current.IsPointerOverGameObject()
 		) {
 			HandleInput();
+		} 
+		else {
+			previousCell = null;
 		}
 	}
 
@@ -56,8 +68,31 @@ public class HexMapEditor : MonoBehaviour {
 		Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		if (Physics.Raycast(inputRay, out hit)) {
+			HexCell currentCell = hexGrid.GetCell(hit.point);
+			if (previousCell && previousCell != currentCell){
+				ValidateDrag(currentCell);
+			}
+			else {
+				isDrag = false;
+			}
 			EditCells(hexGrid.GetCell(hit.point));
+			previousCell = currentCell;
+		} 
+		else {
+			previousCell = null;
 		}
+	}
+
+	void ValidateDrag(HexCell currentCell){
+		for (dragDirection = HexDirection.NE; dragDirection <= HexDirection.NW; dragDirection++){
+			if (currentCell != previousCell.GetNeighbor(dragDirection.Opposite())){
+				if (previousCell.GetNeighbor(dragDirection) == currentCell){
+					isDrag = true;
+					return;
+				}
+			}
+		}
+		isDrag = false;
 	}
 
 	void EditCells (HexCell center) {
@@ -84,6 +119,19 @@ public class HexMapEditor : MonoBehaviour {
 			if (applyElevation) {
 				cell.Elevation = activeElevation;
 			}
+			if (riverMode == OptionalToggle.NO){
+				cell.RemoveRiver();
+			}
+			else if (isDrag && riverMode == OptionalToggle.YES){
+				HexCell otherCell = cell.GetNeighbor(dragDirection.Opposite());
+				if (otherCell){
+					otherCell.SetOutgoingRiver(dragDirection);
+				}
+			}
 		}
+	}
+
+	public void SetRiverMode(int mode){
+		riverMode = (OptionalToggle)mode;
 	}
 }
