@@ -3,14 +3,15 @@ using UnityEngine.UI;
 using TMPro;
 
 public class HexGrid : MonoBehaviour {
+    int cellCountX, cellCountZ;
 
-	public int width = 6;
-	public int height = 6;
+    public int chunkCountX = 4, chunkCountZ = 3;
 
 	public Color defaultColor = Color.white;
 
 	public HexCell cellPrefab;
 	public TextMeshProUGUI cellLabelPrefab;
+    public Texture2D noiseSource;
 
 	HexCell[] cells;
 
@@ -18,16 +19,11 @@ public class HexGrid : MonoBehaviour {
 	HexMesh hexMesh;
 
 	void Awake () {
+        HexMetrics.noiseSource = noiseSource;
 		gridCanvas = GetComponentInChildren<Canvas>();
 		hexMesh = GetComponentInChildren<HexMesh>();
 
-		cells = new HexCell[height * width];
-
-		for (int z = 0, i = 0; z < height; z++) {
-			for (int x = 0; x < width; x++) {
-				CreateCell(x, z, i++);
-			}
-		}
+        CreateCells();
 	}
 
 	void Start () {
@@ -37,8 +33,23 @@ public class HexGrid : MonoBehaviour {
     public HexCell GetCell (Vector3 position){
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * width + coordinates.Z/2;
+        int index = coordinates.X + coordinates.Z * cellCountZ + coordinates.Z/2;
         return cells[index];
+    }
+
+    void CreateCells(){
+
+        cellCountX = chunkCountX * HexMetrics.chunkSizeX;
+        cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
+
+
+		cells = new HexCell[cellCountX * cellCountZ];
+
+		for (int z = 0, i = 0; z < cellCountZ; z++) {
+			for (int x = 0; x < cellCountX; x++) {
+				CreateCell(x, z, i++);
+			}
+		}
     }
 
 	void CreateCell (int x, int z, int i) {
@@ -58,15 +69,15 @@ public class HexGrid : MonoBehaviour {
 		}
 		if (z > 0) {
 			if ((z & 1) == 0) {
-				cell.SetNeighbor(HexDirection.SE, cells[i - width]);
+				cell.SetNeighbor(HexDirection.SE, cells[i - cellCountZ]);
 				if (x > 0) {
-					cell.SetNeighbor(HexDirection.SW, cells[i - width - 1]);
+					cell.SetNeighbor(HexDirection.SW, cells[i - cellCountZ - 1]);
 				}
 			}
 			else {
-				cell.SetNeighbor(HexDirection.SW, cells[i - width]);
-				if (x < width - 1) {
-					cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
+				cell.SetNeighbor(HexDirection.SW, cells[i - cellCountZ]);
+				if (x < cellCountZ - 1) {
+					cell.SetNeighbor(HexDirection.SE, cells[i - cellCountZ + 1]);
 				}
 			}
 		}
@@ -79,6 +90,7 @@ public class HexGrid : MonoBehaviour {
 		label.text = cell.coordinates.ToStringOnSeparateLines();
 
         cell.uiRect = label.rectTransform;
+        cell.Elevation = 0;
 	}
 
     public void Refresh(){
