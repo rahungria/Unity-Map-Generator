@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace conflict{
+namespace conficlt
+{
+	
+
 [CustomPropertyDrawer(typeof(HexCoordinates))]
 public class HexCoordinatesDrawer : PropertyDrawer {
 
@@ -17,4 +20,5 @@ public class HexCoordinatesDrawer : PropertyDrawer {
 		GUI.Label(position, coordinates.ToString());
 	}
 }
+
 }
