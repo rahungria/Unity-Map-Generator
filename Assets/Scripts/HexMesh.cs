@@ -5,19 +5,17 @@ using System;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class HexMesh : MonoBehaviour {
 
-	public bool useCollider, useConvexCollider, useColors, useUVCoordinates;
+	public bool useCollider, useColors, useUVCoordinates;
 
-	[NonSerialized] List<Vector3> vertices = new List<Vector3>();
-	[NonSerialized] List<Color> colors = new List<Color>();
-	[NonSerialized] List<Vector2> uvs = new List<Vector2>();
-	[NonSerialized] List<int> triangles = new List<int>();
+	[NonSerialized] List<Vector3> vertices;
+	[NonSerialized] List<Color> colors;
+	[NonSerialized] List<Vector2> uvs;
+	[NonSerialized] List<int> triangles;
 
 	Mesh hexMesh;
 	MeshCollider meshCollider;
 
 	void Awake () {
-
-
 		GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
 		if (useCollider) {
 			meshCollider = gameObject.AddComponent<MeshCollider>();
@@ -53,7 +51,6 @@ public class HexMesh : MonoBehaviour {
 		hexMesh.RecalculateNormals();
 		if (useCollider) {
 			meshCollider.sharedMesh = hexMesh;
-			meshCollider.convex = useConvexCollider;
 		}
 	}
 
