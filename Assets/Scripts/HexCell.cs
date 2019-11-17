@@ -130,7 +130,7 @@ public class HexCell : MonoBehaviour {
 				HexMetrics.elevationStep;
 		}
 	}
-	public float waterSurfaceY{
+	public float WaterSurfaceY{
 		get {
 			return
 			(waterLevel + HexMetrics.waterElevationOffset) *

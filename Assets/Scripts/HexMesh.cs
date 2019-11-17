@@ -7,10 +7,10 @@ public class HexMesh : MonoBehaviour {
 
 	public bool useCollider, useColors, useUVCoordinates;
 
-	[NonSerialized] List<Vector3> vertices;
-	[NonSerialized] List<Color> colors;
-	[NonSerialized] List<Vector2> uvs;
-	[NonSerialized] List<int> triangles;
+	[NonSerialized] List<Vector3> vertices = new List<Vector3>();
+	[NonSerialized] List<Color> colors = new List<Color>();
+	[NonSerialized] List<Vector2> uvs = new List<Vector2>();
+	[NonSerialized] List<int> triangles = new List<int>();
 
 	Mesh hexMesh;
 	MeshCollider meshCollider;
