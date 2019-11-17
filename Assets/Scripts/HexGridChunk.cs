@@ -86,6 +86,10 @@ public class HexGridChunk : MonoBehaviour {
 		if (direction <= HexDirection.SE) {
 			TriangulateConnection(direction, cell, e);
 		}
+
+		if (cell.IsUnderwater){
+			TraingulateWater(direction, cell, center);
+		}
 	}
 
 	void TriangulateWithoutRiver (
@@ -679,5 +683,31 @@ public class HexGridChunk : MonoBehaviour {
 		roads.AddQuad(v2, v3, v5, v6);
 		roads.AddQuadUV(0f, 1f, 0f, 0f);
 		roads.AddQuadUV(1f, 0f, 0f, 0f);
+	}
+
+	void TraingulateWater(HexDirection direction, HexCell cell, Vector3 center){
+		center.y = cell.waterSurfaceY;
+		Vector3 c1 = center + HexMetrics.GetFirstSolidCorner(direction);
+		Vector3 c2 = center + HexMetrics.GetSecondSolidCorner(direction);
+
+		waterSurface.AddTriangle(center, c1, c2);
+
+		if (direction <= HexDirection.SE){
+			HexCell neighbour = cell.GetNeighbor(direction);
+			if (neighbour != null && neighbour.IsUnderwater){
+				Vector3 bridge = HexMetrics.GetBridge(direction);
+				Vector3 e1 = c1 + bridge;
+				Vector3 e2 = c2 + bridge;
+
+				waterSurface.AddQuad(c1,c2, e1,e2);
+
+				if (direction <= HexDirection.E){
+					HexCell nextNeighbour = cell.GetNeighbor(direction.Next());
+					if (nextNeighbour != null && nextNeighbour.IsUnderwater){
+						waterSurface.AddTriangle(c2, e2, c2 + HexMetrics.GetBridge(direction.Next()));
+					} 
+				}
+			}
+		}
 	}
 }
