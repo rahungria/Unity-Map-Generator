@@ -7,10 +7,10 @@ public class HexMesh : MonoBehaviour {
 
 	public bool useCollider, useColors, useUVCoordinates;
 
-	[NonSerialized] List<Vector3> vertices = new List<Vector3>();
-	[NonSerialized] List<Color> colors = new List<Color>();
-	[NonSerialized] List<Vector2> uvs = new List<Vector2>();
-	[NonSerialized] List<int> triangles = new List<int>();
+	[NonSerialized] List<Vector3> vertices;
+	[NonSerialized] List<Color> colors;
+	[NonSerialized] List<Vector2> uvs;
+	[NonSerialized] List<int> triangles;
 
 	Mesh hexMesh;
 	MeshCollider meshCollider;
@@ -98,6 +98,22 @@ public class HexMesh : MonoBehaviour {
 		vertices.Add(HexMetrics.Perturb(v2));
 		vertices.Add(HexMetrics.Perturb(v3));
 		vertices.Add(HexMetrics.Perturb(v4));
+		triangles.Add(vertexIndex);
+		triangles.Add(vertexIndex + 2);
+		triangles.Add(vertexIndex + 1);
+		triangles.Add(vertexIndex + 1);
+		triangles.Add(vertexIndex + 2);
+		triangles.Add(vertexIndex + 3);
+	}
+
+	public void AddQuadUnperturbed (
+		Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4
+	) {
+		int vertexIndex = vertices.Count;
+		vertices.Add(v1);
+		vertices.Add(v2);
+		vertices.Add(v3);
+		vertices.Add(v4);
 		triangles.Add(vertexIndex);
 		triangles.Add(vertexIndex + 2);
 		triangles.Add(vertexIndex + 1);
