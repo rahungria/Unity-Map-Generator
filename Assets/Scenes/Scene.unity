@@ -4554,7 +4554,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2142000451}
-        m_MethodName: setWaterLevel
+        m_MethodName: SetWaterLevel
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6125,7 +6125,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2142000451}
-        m_MethodName: setApplyWaterLevel
+        m_MethodName: SetApplyWaterLevel
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
