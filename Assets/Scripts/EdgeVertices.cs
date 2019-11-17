@@ -6,16 +6,17 @@ public struct EdgeVertices {
 
 	public EdgeVertices (Vector3 corner1, Vector3 corner2) {
 		v1 = corner1;
-		v2 = Vector3.Lerp(corner1, corner2, .25f);
-		v3 = Vector3.Lerp(corner1, corner2, .5f);
-		v4 = Vector3.Lerp(corner1, corner2, .75f);
+		v2 = Vector3.Lerp(corner1, corner2, 0.25f);
+		v3 = Vector3.Lerp(corner1, corner2, 0.5f);
+		v4 = Vector3.Lerp(corner1, corner2, 0.75f);
 		v5 = corner2;
 	}
-	public EdgeVertices (Vector3 corner1, Vector3 corner2, float outterStep) {
+
+	public EdgeVertices (Vector3 corner1, Vector3 corner2, float outerStep) {
 		v1 = corner1;
-		v2 = Vector3.Lerp(corner1, corner2, outterStep);
-		v3 = Vector3.Lerp(corner1, corner2, .5f);
-		v4 = Vector3.Lerp(corner1, corner2, 1f - outterStep);
+		v2 = Vector3.Lerp(corner1, corner2, outerStep);
+		v3 = Vector3.Lerp(corner1, corner2, 0.5f);
+		v4 = Vector3.Lerp(corner1, corner2, 1f - outerStep);
 		v5 = corner2;
 	}
 

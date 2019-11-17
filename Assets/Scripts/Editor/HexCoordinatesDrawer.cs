@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-
-namespace conficlt
+namespace a
 {
 	
 
@@ -20,5 +19,4 @@ public class HexCoordinatesDrawer : PropertyDrawer {
 		GUI.Label(position, coordinates.ToString());
 	}
 }
-
 }
