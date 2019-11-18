@@ -18,7 +18,10 @@ public class HexGrid : MonoBehaviour {
 
 	int cellCountX, cellCountZ;
 
+	public int seed;
+
 	void Awake () {
+		HexMetrics.InitializeHashGrid(seed);
 		HexMetrics.noiseSource = noiseSource;
 
 		cellCountX = chunkCountX * HexMetrics.chunkSizeX;
@@ -50,7 +53,12 @@ public class HexGrid : MonoBehaviour {
 	}
 
 	void OnEnable () {
-		HexMetrics.noiseSource = noiseSource;
+		if (!HexMetrics.noiseSource){
+			HexMetrics.noiseSource = noiseSource;
+			HexMetrics.InitializeHashGrid(seed);
+		}
+
+
 	}
 
 	public HexCell GetCell (Vector3 position) {

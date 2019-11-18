@@ -38,6 +38,38 @@ public static class HexMetrics {
 	public const float noiseScale = 0.003f;
 
 	public const int chunkSizeX = 5, chunkSizeZ = 5;
+	public const int hashGridSize = 128;
+
+	static HexHash[] hashGrid;
+
+	public static void InitializeHashGrid(int seed) {
+		Random.State state = Random.state;
+		Random.InitState(seed);
+		hashGrid = new HexHash[hashGridSize*hashGridSize];
+		for (int i = 0; i < hashGrid.Length; i++){
+			hashGrid[i] = HexHash.Create();
+		}
+
+		Random.state = state;
+	}
+
+	public static HexHash SampleHashGrid(Vector3 position){
+		int x = Mathf.Abs((int) position.x % hashGridSize);
+		int z = Mathf.Abs((int) position.z % hashGridSize);
+
+		return hashGrid[x * z + hashGridSize];
+	}
+
+	static float[][] featureThresholds = {
+		new float[] {0.0f, 0.0f, 0.4f},
+		new float[] {0.0f, 0.4f, 0.6f},
+		new float[] {0.4f, 0.6f, 0.8f},
+		new float[] {0.8f, 0.3f, 0.0f}
+	};
+
+	public static float[] GetFeatureThresholds(int level){
+		return featureThresholds[Mathf.Clamp(level,0, featureThresholds.Length)];
+	}
 
 	static Vector3[] corners = {
 		new Vector3(0f, 0f, outerRadius),
