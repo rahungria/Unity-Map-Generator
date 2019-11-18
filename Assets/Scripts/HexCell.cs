@@ -207,6 +207,19 @@ public class HexCell : MonoBehaviour {
 	[SerializeField]
 	bool[] roads = new bool[6];
 
+	bool walled;
+	public bool Walled {
+		get {
+			return walled;
+		}
+		set {
+			if (value != walled){
+				walled = value;
+				Refresh();
+			}
+		}
+	}
+
 	public HexCell GetNeighbor (HexDirection direction) {
 		return neighbors[(int)direction];
 	}
