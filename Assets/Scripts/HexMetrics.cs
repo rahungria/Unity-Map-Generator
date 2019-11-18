@@ -35,7 +35,7 @@ public static class HexMetrics {
 
 	public const float waterElevationOffset = -0.5f;
 
-	public const float wallHeight = 5f;
+	public const float wallHeight = 3f;
 
 	public const float wallThickness = 0.75f;
 

@@ -11,7 +11,6 @@ public class HexMapEditor : MonoBehaviour {
 	int activeWaterLevel;
 
 	int activeUrbanLevel, activeFarmLevel, activePlantLevel;
-	bool applyUrbanLevel, applyFarmLevel, applyPlantLevel;
 
 	Color activeColor;
 
@@ -20,6 +19,8 @@ public class HexMapEditor : MonoBehaviour {
 	bool applyColor;
 	bool applyElevation = true;
 	bool applyWaterLevel = true;
+
+	bool applyUrbanLevel, applyFarmLevel, applyPlantLevel;
 
 	enum OptionalToggle {
 		Ignore, Yes, No
@@ -38,32 +39,6 @@ public class HexMapEditor : MonoBehaviour {
 		}
 	}
 
-	public void SetApplyUrbanLevel(bool toggle){	
-		applyUrbanLevel = toggle;
-	}
-
-	public void SetUrbanLevel(float level){
-		activeUrbanLevel = (int)level;
-	}
-	public void SetApplyFarmLevel(bool toggle){	
-		applyFarmLevel = toggle;
-	}
-
-	public void SetFarmLevel(float level){
-		activeFarmLevel = (int)level;
-	}
-	public void SetApplyPlantLevel(bool toggle){	
-		applyPlantLevel = toggle;
-	}
-
-	public void SetPlantLevel(float level){
-		activePlantLevel = (int)level;
-	}
-
-	public void setWalledMode (int mode){
-		walledMode = (OptionalToggle)mode;
-	}
-
 	public void SetApplyElevation (bool toggle) {
 		applyElevation = toggle;
 	}
@@ -75,8 +50,33 @@ public class HexMapEditor : MonoBehaviour {
 	public void SetApplyWaterLevel (bool toggle) {
 		applyWaterLevel = toggle;
 	}
+
 	public void SetWaterLevel (float level) {
 		activeWaterLevel = (int)level;
+	}
+
+	public void SetApplyUrbanLevel (bool toggle) {
+		applyUrbanLevel = toggle;
+	}
+
+	public void SetUrbanLevel (float level) {
+		activeUrbanLevel = (int)level;
+	}
+
+	public void SetApplyFarmLevel (bool toggle) {
+		applyFarmLevel = toggle;
+	}
+
+	public void SetFarmLevel (float level) {
+		activeFarmLevel = (int)level;
+	}
+
+	public void SetApplyPlantLevel (bool toggle) {
+		applyPlantLevel = toggle;
+	}
+
+	public void SetPlantLevel (float level) {
+		activePlantLevel = (int)level;
 	}
 
 	public void SetBrushSize (float size) {
@@ -89,6 +89,10 @@ public class HexMapEditor : MonoBehaviour {
 
 	public void SetRoadMode (int mode) {
 		roadMode = (OptionalToggle)mode;
+	}
+
+	public void SetWalledMode (int mode) {
+		walledMode = (OptionalToggle)mode;
 	}
 
 	public void ShowUI (bool visible) {
@@ -171,13 +175,13 @@ public class HexMapEditor : MonoBehaviour {
 			if (applyWaterLevel) {
 				cell.WaterLevel = activeWaterLevel;
 			}
-			if (applyUrbanLevel){
+			if (applyUrbanLevel) {
 				cell.UrbanLevel = activeUrbanLevel;
 			}
-			if (applyFarmLevel){
+			if (applyFarmLevel) {
 				cell.FarmLevel = activeFarmLevel;
 			}
-			if (applyPlantLevel){
+			if (applyPlantLevel) {
 				cell.PlantLevel = activePlantLevel;
 			}
 			if (riverMode == OptionalToggle.No) {
@@ -186,7 +190,7 @@ public class HexMapEditor : MonoBehaviour {
 			if (roadMode == OptionalToggle.No) {
 				cell.RemoveRoads();
 			}
-			if (walledMode != OptionalToggle.Ignore){
+			if (walledMode != OptionalToggle.Ignore) {
 				cell.Walled = walledMode == OptionalToggle.Yes;
 			}
 			if (isDrag) {

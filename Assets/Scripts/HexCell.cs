@@ -168,6 +168,7 @@ public class HexCell : MonoBehaviour {
 			}
 		}
 	}
+
 	public int FarmLevel {
 		get {
 			return farmLevel;
@@ -179,6 +180,7 @@ public class HexCell : MonoBehaviour {
 			}
 		}
 	}
+
 	public int PlantLevel {
 		get {
 			return plantLevel;
@@ -190,35 +192,36 @@ public class HexCell : MonoBehaviour {
 			}
 		}
 	}
-	
-	int urbanLevel, plantLevel, farmLevel;
+
+	public bool Walled {
+		get {
+			return walled;
+		}
+		set {
+			if (walled != value) {
+				walled = value;
+				Refresh();
+			}
+		}
+	}
 
 	Color color;
 
 	int elevation = int.MinValue;
 	int waterLevel;
 
+	int urbanLevel, farmLevel, plantLevel;
+
+	bool walled;
+
 	bool hasIncomingRiver, hasOutgoingRiver;
 	HexDirection incomingRiver, outgoingRiver;
 
 	[SerializeField]
-	HexCell[] neighbors = new HexCell[6];
+	HexCell[] neighbors;
 
 	[SerializeField]
-	bool[] roads = new bool[6];
-
-	bool walled;
-	public bool Walled {
-		get {
-			return walled;
-		}
-		set {
-			if (value != walled){
-				walled = value;
-				Refresh();
-			}
-		}
-	}
+	bool[] roads;
 
 	public HexCell GetNeighbor (HexDirection direction) {
 		return neighbors[(int)direction];
