@@ -17,7 +17,7 @@ public static class HexMetrics {
 
 	public const float waterBlendFactor = 1f - waterFactor;
 
-	public const float elevationStep = 3f;
+	public const float elevationStep = 4f;
 
 	public const int terracesPerSlope = 2;
 
@@ -35,22 +35,27 @@ public static class HexMetrics {
 
 	public const float waterElevationOffset = -0.5f;
 
-	public const float wallHeight = 3f;
+	public const float wallHeight = 5f;
 
-	public const float wallThickness = 0.75f;
+	public const float wallYOffset = -1f;
+
+	public const float wallThickness = 1f;
 
 	public const float wallElevationOffset = verticalTerraceStepSize;
 
+	public const float wallTowerThreshold = 0.5f;
+
+	public const float bridgeDesignLength = 7f;
+
 	public const float noiseScale = 0.003f;
 
-	public const int chunkSizeX = 5, chunkSizeZ = 5;
+	public const int chunkSizeX = 10, chunkSizeZ = 10;
 
 	public const int hashGridSize = 256;
 
 	public const float hashGridScale = 0.25f;
 
 	static HexHash[] hashGrid;
-	public static Color[] colors;
 
 	static Vector3[] corners = {
 		new Vector3(0f, 0f, outerRadius),
@@ -162,7 +167,7 @@ public static class HexMetrics {
 		near.z += (far.z - near.z) * 0.5f;
 		float v =
 			near.y < far.y ? wallElevationOffset : (1f - wallElevationOffset);
-		near.y += (far.y - near.y) * v;
+		near.y += (far.y - near.y) * v + wallYOffset;
 		return near;
 	}
 

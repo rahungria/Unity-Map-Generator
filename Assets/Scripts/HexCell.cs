@@ -171,6 +171,25 @@ public class HexCell : MonoBehaviour {
 		}
 	}
 
+	public int SpecialIndex {
+		get {
+			return specialIndex;
+		}
+		set {
+			if (specialIndex != value && !HasRiver) {
+				specialIndex = value;
+				RemoveRoads();
+				RefreshSelfOnly();
+			}
+		}
+	}
+
+	public bool IsSpecial {
+		get {
+			return specialIndex > 0;
+		}
+	}
+
 	public bool Walled {
 		get {
 			return walled;
@@ -183,27 +202,26 @@ public class HexCell : MonoBehaviour {
 		}
 	}
 
-	int terrainTypeIndex;
 	public int TerrainTypeIndex {
 		get {
 			return terrainTypeIndex;
 		}
 		set {
-			if (terrainTypeIndex != value){
+			if (terrainTypeIndex != value) {
 				terrainTypeIndex = value;
 				Refresh();
 			}
 		}
 	}
-	public Color Color {
-		get {
-			return HexMetrics.colors[terrainTypeIndex];
-		}
-	}
+
+	int terrainTypeIndex;
+
 	int elevation = int.MinValue;
 	int waterLevel;
 
 	int urbanLevel, farmLevel, plantLevel;
+
+	int specialIndex;
 
 	bool walled;
 
@@ -288,10 +306,12 @@ public class HexCell : MonoBehaviour {
 		}
 		hasOutgoingRiver = true;
 		outgoingRiver = direction;
+		specialIndex = 0;
 
 		neighbor.RemoveIncomingRiver();
 		neighbor.hasIncomingRiver = true;
 		neighbor.incomingRiver = direction.Opposite();
+		neighbor.specialIndex = 0;
 
 		SetRoad((int)direction, false);
 	}
@@ -303,6 +323,7 @@ public class HexCell : MonoBehaviour {
 	public void AddRoad (HexDirection direction) {
 		if (
 			!roads[(int)direction] && !HasRiverThroughEdge(direction) &&
+			!IsSpecial && !GetNeighbor(direction).IsSpecial &&
 			GetElevationDifference(direction) <= 1
 		) {
 			SetRoad((int)direction, true);
@@ -350,7 +371,7 @@ public class HexCell : MonoBehaviour {
 		RefreshSelfOnly();
 	}
 
-	void RefreshPosition (){
+	void RefreshPosition () {
 		Vector3 position = transform.localPosition;
 		position.y = elevation * HexMetrics.elevationStep;
 		position.y +=
@@ -380,51 +401,70 @@ public class HexCell : MonoBehaviour {
 	}
 
 	public void Save (BinaryWriter writer) {
-		writer.Write((byte)terrainTypeIndex); //1
-		writer.Write((byte)elevation); //2
-		writer.Write((byte)waterLevel); //3
-		writer.Write(walled); //4
+		writer.Write((byte)terrainTypeIndex);
+		writer.Write((byte)elevation);
+		writer.Write((byte)waterLevel);
+		writer.Write((byte)urbanLevel);
+		writer.Write((byte)farmLevel);
+		writer.Write((byte)plantLevel);
+		writer.Write((byte)specialIndex);
+		writer.Write(walled);
 
-		writer.Write((hasIncomingRiver ? ((byte)(incomingRiver + 128)) : ((byte)0)));	//5
-		writer.Write((hasOutgoingRiver ? ((byte)(outgoingRiver + 128)) : ((byte)0)));	//6
+		if (hasIncomingRiver) {
+			writer.Write((byte)(incomingRiver + 128));
+		}
+		else {
+			writer.Write((byte)0);
+		}
+
+		if (hasOutgoingRiver) {
+			writer.Write((byte)(outgoingRiver + 128));
+		}
+		else {
+			writer.Write((byte)0);
+		}
 
 		int roadFlags = 0;
-		for (byte i = 0; i < roads.Length; i++){
-			if (roads[i]){
+		for (int i = 0; i < roads.Length; i++) {
+			if (roads[i]) {
 				roadFlags |= 1 << i;
 			}
 		}
-		writer.Write((byte)roadFlags);	//7
+		writer.Write((byte)roadFlags);
 	}
 
 	public void Load (BinaryReader reader) {
-		terrainTypeIndex = reader.ReadByte();	//1
-		elevation = reader.ReadByte();	//2
-		waterLevel = reader.ReadByte();	//3
-		walled = reader.ReadBoolean();	//4
+		terrainTypeIndex = reader.ReadByte();
+		elevation = reader.ReadByte();
+		RefreshPosition();
+		waterLevel = reader.ReadByte();
+		urbanLevel = reader.ReadByte();
+		farmLevel = reader.ReadByte();
+		plantLevel = reader.ReadByte();
+		specialIndex = reader.ReadByte();
+		walled = reader.ReadBoolean();
 
-		byte riverData = reader.ReadByte(); //5
-		if (riverData >= 128){
+		byte riverData = reader.ReadByte();
+		if (riverData >= 128) {
 			hasIncomingRiver = true;
-			incomingRiver = (HexDirection) (riverData-128);
+			incomingRiver = (HexDirection)(riverData - 128);
 		}
 		else {
 			hasIncomingRiver = false;
 		}
-		riverData = reader.ReadByte();	//6
-		if (riverData >= 128){
+
+		riverData = reader.ReadByte();
+		if (riverData >= 128) {
 			hasOutgoingRiver = true;
-			outgoingRiver = (HexDirection) (riverData-128);
+			outgoingRiver = (HexDirection)(riverData - 128);
 		}
 		else {
 			hasOutgoingRiver = false;
 		}
 
-		int roadFlags = reader.ReadByte();	//7
-		for (int i = 0; i < roads.Length; i++){
+		int roadFlags = reader.ReadByte();
+		for (int i = 0; i < roads.Length; i++) {
 			roads[i] = (roadFlags & (1 << i)) != 0;
 		}
-		
-		RefreshPosition();
 	}
 }

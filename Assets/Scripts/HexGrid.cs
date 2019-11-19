@@ -4,35 +4,51 @@ using System.IO;
 
 public class HexGrid : MonoBehaviour {
 
-	public int chunkCountX = 4, chunkCountZ = 3;
+	public int cellCountX = 20, cellCountZ = 15;
+
 	public HexCell cellPrefab;
 	public Text cellLabelPrefab;
 	public HexGridChunk chunkPrefab;
 
 	public Texture2D noiseSource;
-	public Color[] colors;
 
 	public int seed;
+
+//	public Color[] colors;
 
 	HexGridChunk[] chunks;
 	HexCell[] cells;
 
-	int cellCountX, cellCountZ;
-
-	public static HexGrid instance { get; private set; }
+	int chunkCountX, chunkCountZ;
 
 	void Awake () {
-		instance = this;
-
 		HexMetrics.noiseSource = noiseSource;
 		HexMetrics.InitializeHashGrid(seed);
-		HexMetrics.colors = colors;
+		CreateMap(cellCountX, cellCountZ);
+	}
 
-		cellCountX = chunkCountX * HexMetrics.chunkSizeX;
-		cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
+	public bool CreateMap (int x, int z) {
+		if (
+			x <= 0 || x % HexMetrics.chunkSizeX != 0 ||
+			z <= 0 || z % HexMetrics.chunkSizeZ != 0
+		) {
+			Debug.LogError("Unsupported map size.");
+			return false;
+		}
 
+		if (chunks != null) {
+			for (int i = 0; i < chunks.Length; i++) {
+				Destroy(chunks[i].gameObject);
+			}
+		}
+
+		cellCountX = x;
+		cellCountZ = z;
+		chunkCountX = cellCountX / HexMetrics.chunkSizeX;
+		chunkCountZ = cellCountZ / HexMetrics.chunkSizeZ;
 		CreateChunks();
 		CreateCells();
+		return true;
 	}
 
 	void CreateChunks () {
@@ -60,8 +76,8 @@ public class HexGrid : MonoBehaviour {
 		if (!HexMetrics.noiseSource) {
 			HexMetrics.noiseSource = noiseSource;
 			HexMetrics.InitializeHashGrid(seed);
-			HexMetrics.colors = colors;
-		}		
+//			HexMetrics.colors = colors;
+		}
 	}
 
 	public HexCell GetCell (Vector3 position) {
@@ -138,18 +154,33 @@ public class HexGrid : MonoBehaviour {
 		int localZ = z - chunkZ * HexMetrics.chunkSizeZ;
 		chunk.AddCell(localX + localZ * HexMetrics.chunkSizeX, cell);
 	}
+
 	public void Save (BinaryWriter writer) {
-		foreach (HexCell cell in cells){
-			cell.Save(writer);
+		writer.Write(cellCountX);
+		writer.Write(cellCountZ);
+
+		for (int i = 0; i < cells.Length; i++) {
+			cells[i].Save(writer);
 		}
 	}
-	public void Load (BinaryReader reader) {
-		foreach (HexCell cell in cells){
-			cell.Load(reader);
+
+	public void Load (BinaryReader reader, int header) {
+		int x = 20, z = 15;
+		if (header >= 1) {
+			x = reader.ReadInt32();
+			z = reader.ReadInt32();
+		}
+		if (x != cellCountX || z != cellCountZ) {
+			if (!CreateMap(x, z)) {
+				return;
+			}
 		}
 
-		foreach (HexGridChunk chunk in chunks){
-			chunk.Refresh();
+		for (int i = 0; i < cells.Length; i++) {
+			cells[i].Load(reader);
+		}
+		for (int i = 0; i < chunks.Length; i++) {
+			chunks[i].Refresh();
 		}
 	}
 }
